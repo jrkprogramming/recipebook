@@ -3,7 +3,7 @@ import Head from "next/head";
 import Link from "next/link";
 import { api, type RouterOutputs  } from "~/utils/api";
 import { Header } from "../components/Header";
-import {useState} from 'react'
+import {useState, FormEvent, ChangeEvent} from 'react'
 
 export default function Home() {
   const hello = api.example.hello.useQuery({ text: "from tRPC" });
@@ -41,7 +41,7 @@ const Content: React.FC = () => {
         calories: 0,
     });
 
-  const handleChange = (e) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prevState) => {
       return {
@@ -67,7 +67,7 @@ const Content: React.FC = () => {
     }
   })
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     createRecipe.mutate({
                       mealName: formData.mealName,
