@@ -1,8 +1,9 @@
 import { signIn, signOut, useSession } from "next-auth/react";
 import Head from "next/head";
 import Link from "next/link";
-import { api } from "~/utils/api";
+import { api, type RouterOutputs  } from "~/utils/api";
 import { Header } from "../components/Header";
+import {useState} from 'react'
 
 export default function Home() {
   const hello = api.example.hello.useQuery({ text: "from tRPC" });
@@ -16,7 +17,161 @@ export default function Home() {
       </Head>
     <main>
       <Header/>
+      <Content/>
     </main>
     </>
   );
+}
+
+type Recipe = RouterOutputs["recipe"]["getAll"][0];
+
+
+const Content: React.FC = () => {
+  const {data: sessionData} = useSession()
+  const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
+
+    const [formData, setFormData] = useState({
+              mealName: "",
+        notes: "",
+        // ingredients: [""],
+        // instructions: [""],
+        protein: 0,
+        fat: 0,
+        carbs: 0,
+        calories: 0,
+    });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevState) => {
+      return {
+        ...prevState,
+        [name]: value,
+      };
+    });
+  };
+
+  const{data: recipes, refetch: refetchRecipes} = api.recipe.getAll.useQuery(
+  undefined, // no input
+  {
+    enabled: sessionData?.user !== undefined,
+    onSuccess: (data) => {
+      setSelectedRecipe(selectedRecipe ?? data[0] ?? null)
+    }
+  }
+  )
+
+  const createRecipe = api.recipe.create.useMutation({
+    onSuccess: () => {
+      void refetchRecipes();
+    }
+  })
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    createRecipe.mutate({
+                      mealName: formData.mealName,
+                notes: formData.notes,
+                protein: formData.protein,
+                fat: formData.fat,
+                carbs: formData.carbs,
+                calories: formData.calories,
+    })
+  }
+
+  return (
+<div className="mx-5 mt-5 grid grid-cols-4 gap-2">
+      <div className="px-2">
+        <ul className="menu rounded-box w-56 bg-base-100 p-2">
+          {recipes?.map((recipe) => (
+            <li key={recipe.id}>
+              <a
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setSelectedRecipe(recipe);
+                }}
+              >
+                {recipe.mealName}
+              </a>
+            </li>
+          ))}
+        </ul>
+        <div className="divider"></div>
+        {/* <input
+          type="text"
+          placeholder="New Topic"
+          className="input-bordered input input-sm w-full"
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              createRecipe.mutate({
+                mealName: e.currentTarget.value,
+                notes: e.currentTarget.value,
+                protein: e.currentTarget.valueAsNumber,
+                fat: e.currentTarget.valueAsNumber,
+                carbs: e.currentTarget.valueAsNumber,
+                calories: e.currentTarget.valueAsNumber,
+              });
+              e.currentTarget.value = "";
+            }
+          }}
+        /> */}
+<form onSubmit={handleSubmit}>
+
+        <input
+          type="text"
+          name="mealName"
+          value={formData.mealName}
+          onChange={handleChange}
+          placeholder="Meal Name"
+          aria-label=".form-control-lg example"
+        ></input>
+                <input
+          type="text"
+          name="notes"
+          value={formData.notes}
+          onChange={handleChange}
+          placeholder="Notes"
+          aria-label=".form-control-lg example"
+        ></input>
+                <input
+          type="number"
+          name="protein"
+          value={formData.protein}
+          onChange={handleChange}
+          placeholder="Protein"
+          aria-label=".form-control-lg example"
+        ></input>
+        <input
+          type="number"
+          name="fat"
+          value={formData.fat}
+          onChange={handleChange}
+
+          aria-label=".form-control-lg example"
+        ></input>
+                <input
+          type="number"
+          name="carbs"
+          value={formData.carbs}
+          onChange={handleChange}
+
+          aria-label=".form-control-lg example"
+        ></input>
+                <input
+          type="number"
+          name="calories"
+          value={formData.calories}
+          onChange={handleChange}
+
+          aria-label=".form-control-lg example"
+        ></input>
+                <input
+          type="submit"
+          value="CREATE MEAL"
+        ></input>
+</form>
+      </div>
+      </div>
+  )
 }
