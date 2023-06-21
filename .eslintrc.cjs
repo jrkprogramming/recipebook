@@ -17,7 +17,7 @@ const config = {
   parser: "@typescript-eslint/parser",
   parserOptions: {
     project: path.join(__dirname, "tsconfig.json"),
-    extraFileExtensions: [".json"],
+    extraFileExtensions: [".json", ".md"],
   },
   plugins: ["@typescript-eslint"],
   extends: ["next/core-web-vitals", "plugin:@typescript-eslint/recommended"],
