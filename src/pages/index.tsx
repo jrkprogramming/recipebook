@@ -46,10 +46,11 @@ const Content: React.FC = () => {
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
+    const newValue = isNaN(Number(value)) ? value : Number(value);
     setFormData((prevState) => {
       return {
         ...prevState,
-        [name]: value,
+        [name]: newValue,
       };
     });
   };
@@ -144,7 +145,6 @@ const Content: React.FC = () => {
             name="protein"
             value={formData.protein}
             onChange={handleChange}
-            placeholder="Protein"
             aria-label=".form-control-lg example"
           ></input>
           <input
