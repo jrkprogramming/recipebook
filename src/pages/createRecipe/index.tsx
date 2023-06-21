@@ -29,43 +29,13 @@ export default function CreateRecipePage() {
     });
   };
 
-  // const { data: recipes, refetch: refetchRecipes } = api.recipe.getAll.useQuery(
-  //   undefined, // no input
-  //   {
-  //     enabled: sessionData?.user !== undefined,
-  //     onSuccess: (data) => {
-  //       setSelectedRecipe(selectedRecipe ?? data[0] ?? null);
-  //     },
-  //   }
-  // );
-
   const createRecipe = api.recipe.create.useMutation({
     onSuccess: () => {
       // void refetchRecipes();
+      // we acually want to redirect to the show page
       console.log("created recipe");
     },
   });
-
-  // const { data: comments, refetch: refetchComments } =
-  //   api.comment.getAll.useQuery(
-  //     {
-  //       recipeId: selectedRecipe?.id ?? "",
-  //     },
-  //     {
-  //       enabled: sessionData?.user !== undefined && selectedRecipe !== null,
-  //     }
-  //   );
-
-  // const createComment = api.comment.create.useMutation({
-  //   onSuccess: () => {
-  //     void refetchComments();
-  //   },
-  // });
-  // const deleteComment = api.comment.delete.useMutation({
-  //   onSuccess: () => {
-  //     void refetchComments();
-  //   },
-  // });
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();

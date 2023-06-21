@@ -14,6 +14,17 @@ export const recipeRouter = createTRPCRouter({
 		});
 	}),
 
+	delete: protectedProcedure
+		.input(z.object({ id: z.string() }))
+		.mutation(async ({ ctx, input }) => {
+			return ctx.prisma.recipe.delete({
+				where: {
+					id: input.id,
+				},
+			});
+		}),
+
+
 	create: protectedProcedure
 		.input(z.object({ mealName: z.string(), notes: z.string(), protein: z.number(), fat: z.number(), carbs: z.number(), calories: z.number() }))
 		.mutation(({ ctx, input }) => {

@@ -3,6 +3,7 @@ import { api, type RouterOutputs } from "~/utils/api";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { CommentEditor } from "~/components/CommentEditor";
 import { CommentCard } from "~/components/CommentCard";
+import Link from "next/link";
 type Recipe = RouterOutputs["recipe"]["getAll"][0];
 
 export default function MyRecipesPage() {
@@ -18,6 +19,18 @@ export default function MyRecipesPage() {
       },
     }
   );
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+  function handleDeleteRecipe() {
+    void deleteRecipe.mutate({ id: selectedRecipe.id });
+  }
+
+  const deleteRecipe = api.recipe.delete.useMutation({
+    onSuccess: () => {
+      void refetchRecipes();
+    },
+  });
+
   const { data: comments, refetch: refetchComments } =
     api.comment.getAll.useQuery(
       {
@@ -56,6 +69,27 @@ export default function MyRecipesPage() {
         ))}
       </ul>
       <div>
+        <div>
+          Recipe Name: {selectedRecipe?.mealName}
+          <br></br>
+          Created: {selectedRecipe?.createdAt?.toString()}
+          <br></br>
+          Notes: {selectedRecipe?.notes}
+          <br></br>
+          Protein: {selectedRecipe?.protein}g<br></br>
+          Fat: {selectedRecipe?.fat}g<br></br>
+          Carbs: {selectedRecipe?.carbs}g<br></br>
+          Total Calories: {selectedRecipe?.calories}g
+        </div>
+        <div>
+          <button
+            className="btn-warning btn-xs btn px-5"
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            onClick={handleDeleteRecipe}
+          >
+            Delete
+          </button>
+        </div>
         {comments?.map((comment) => (
           <div key={comment.id} className="mt-5">
             <CommentCard
@@ -74,6 +108,7 @@ export default function MyRecipesPage() {
           });
         }}
       />
+      <Link href="/createRecipe">Add a Recipe!</Link>
     </div>
   );
 }

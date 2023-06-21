@@ -90,6 +90,6 @@ model Comment {
     updatedAt DateTime @updatedAt
     title     String
     content   String   @db.Text
-    recipe    Recipe   @relation(fields: [recipeId], references: [id])
+    recipe    Recipe   @relation(fields: [recipeId], references: [id], onDelete: Cascade)
     recipeId  String
 }

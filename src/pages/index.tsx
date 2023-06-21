@@ -18,6 +18,9 @@ export default function Home() {
       <main>
         <Header />
         <h1>Welcome to the homepage!</h1>
+        <Link href="/myRecipes">Go to My Recipes!</Link>
+        <br></br>
+        <Link href="/createRecipe">Add A Recipe!</Link>
       </main>
     </>
   );
