@@ -22,7 +22,9 @@ export default function MyRecipesPage() {
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-call
   function handleDeleteRecipe() {
-    void deleteRecipe.mutate({ id: selectedRecipe.id });
+    if (selectedRecipe !== null) {
+      void deleteRecipe.mutate({ id: selectedRecipe.id });
+    }
   }
 
   const deleteRecipe = api.recipe.delete.useMutation({
@@ -30,6 +32,8 @@ export default function MyRecipesPage() {
       void refetchRecipes();
     },
   });
+
+  // Comments Stuff
 
   const { data: comments, refetch: refetchComments } =
     api.comment.getAll.useQuery(
