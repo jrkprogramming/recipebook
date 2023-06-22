@@ -35,7 +35,7 @@ export const CommentCard = ({
         </div>
         <div className="card-actions mx-2 flex justify-end">
           <button className="btn-warning btn-xs btn px-5" onClick={onDelete}>
-            Delete
+            Delete Comment
           </button>
         </div>
       </div>

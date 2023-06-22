@@ -14,6 +14,25 @@ export const recipeRouter = createTRPCRouter({
 		});
 	}),
 
+	edit: protectedProcedure
+		.input(z.object({ id: z.string(), mealName: z.string(), notes: z.string(), protein: z.number(), fat: z.number(), carbs: z.number(), calories: z.number() }))
+		.mutation(async ({ ctx, input }) => {
+			return ctx.prisma.recipe.update({
+				where: {
+					id: input.id,
+				},
+				data: {
+					mealName: input.mealName,
+					notes: input.notes,
+					protein: input.protein,
+					fat: input.fat,
+					carbs: input.carbs,
+					calories: input.calories,
+					userId: ctx.session.user.id,
+				},
+			});
+		}),
+
 	delete: protectedProcedure
 		.input(z.object({ id: z.string() }))
 		.mutation(async ({ ctx, input }) => {
@@ -23,6 +42,8 @@ export const recipeRouter = createTRPCRouter({
 				},
 			});
 		}),
+
+
 
 
 	create: protectedProcedure

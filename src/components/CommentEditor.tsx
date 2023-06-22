@@ -15,7 +15,7 @@ export const CommentEditor = ({
           <input
             type="text"
             placeholder="Comment Title"
-            className="input-primary input input-lg w-full font-bold"
+            className="input-primary input input-lg font-bold"
             value={title}
             onChange={(e) => setTitle(e.currentTarget.value)}
           />
