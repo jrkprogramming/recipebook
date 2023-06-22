@@ -29,7 +29,7 @@ export default function MyRecipesPage() {
       enabled: sessionData?.user !== undefined,
       onSuccess: (data) => {
         // setSelectedRecipe(selectedRecipe ?? data[0] ?? null);
-        console.log("recipes!");
+        console.log("recipes rendered!");
       },
     }
   );
@@ -45,6 +45,8 @@ export default function MyRecipesPage() {
 
   const editRecipe = api.recipe.edit.useMutation({
     onSuccess: () => {
+      handleToggle();
+      setSelectedRecipe(null);
       void refetchRecipes();
     },
   });
