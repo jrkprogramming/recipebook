@@ -202,13 +202,13 @@ export default function MyRecipesPage() {
                     aria-label=".form-control-lg example"
                   ></input>
                   {/* closes the modal */}
-                  <button className="btn-primary btn" onClick={handleToggle}>
-                    CLOSE
-                  </button>
                   <button className="btn-primary btn" onClick={handleSubmit}>
                     UPDATE
                   </button>
                 </form>
+                <button className="btn-primary btn" onClick={handleToggle}>
+                  CLOSE
+                </button>
               </Modal>
             </div>
             {comments?.map((comment) => (

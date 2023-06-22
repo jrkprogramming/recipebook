@@ -1,6 +1,7 @@
 import { signIn, signOut, useSession } from "next-auth/react";
 import { useState, type FormEvent, type ChangeEvent } from "react";
 import { api, type RouterOutputs } from "~/utils/api";
+import Link from "next/link";
 
 export default function CreateRecipePage() {
   const { data: sessionData } = useSession();
@@ -33,6 +34,7 @@ export default function CreateRecipePage() {
     onSuccess: () => {
       // void refetchRecipes();
       // we acually want to redirect to the show page
+      <Link href="/myRecipes"></Link>;
       console.log("created recipe");
     },
   });
