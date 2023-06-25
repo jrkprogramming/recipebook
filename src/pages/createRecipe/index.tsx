@@ -2,6 +2,7 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import { useState, type FormEvent, type ChangeEvent } from "react";
 import { api, type RouterOutputs } from "~/utils/api";
 import Link from "next/link";
+import { Header } from "../../components/Header";
 
 export default function CreateRecipePage() {
   const { data: sessionData } = useSession();
@@ -103,7 +104,6 @@ export default function CreateRecipePage() {
           <input type="submit" value="CREATE MEAL"></input>
         </form>
       </div>
-      ;
     </div>
   );
 }

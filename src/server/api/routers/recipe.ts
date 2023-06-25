@@ -43,9 +43,6 @@ export const recipeRouter = createTRPCRouter({
 			});
 		}),
 
-
-
-
 	create: protectedProcedure
 		.input(z.object({ mealName: z.string(), notes: z.string(), protein: z.number(), fat: z.number(), carbs: z.number(), calories: z.number() }))
 		.mutation(({ ctx, input }) => {
@@ -58,7 +55,6 @@ export const recipeRouter = createTRPCRouter({
 					carbs: input.carbs,
 					calories: input.calories,
 					userId: ctx.session.user.id,
-
 				}
 			})
 		})
