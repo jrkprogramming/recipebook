@@ -111,149 +111,161 @@ export default function MyRecipesPage() {
       className="flex min-h-screen items-center justify-center"
       style={{ backgroundColor: "rgb(69, 67, 67)" }}
     >
-      <div className="bg-stone mx-5 my-5 w-full max-w-2xl rounded-lg bg-opacity-50 p-8">
-        <ul className="bg-gold menu rounded-box w-56 p-2">
-          {recipes?.map((recipe) => (
-            <li key={recipe.id}>
-              <a
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setSelectedRecipe(recipe);
-                }}
-                className="hover:text-gold text-white"
-              >
-                {recipe.mealName}
-              </a>
-            </li>
-          ))}
-        </ul>
-        <div className="mt-4 text-white">
-          {selectedRecipe && (
-            <div>
-              <h2 className="text-2xl font-bold">{selectedRecipe?.mealName}</h2>
-              <p className="mt-2 text-base">
-                Created: {selectedRecipe?.createdAt?.toString()}
-              </p>
-              <p className="mt-2 text-base">Notes: {selectedRecipe?.notes}</p>
-              <div className="mt-4 grid grid-cols-2 gap-4">
-                <div>
-                  <p className="text-base">
-                    Protein: {selectedRecipe?.protein}g
-                  </p>
-                </div>
-                <div>
-                  <p className="text-base">Fat: {selectedRecipe?.fat}g</p>
-                </div>
-                <div>
-                  <p className="text-base">Carbs: {selectedRecipe?.carbs}g</p>
-                </div>
-                <div>
-                  <p className="text-base">
-                    Total Calories: {selectedRecipe?.calories}g
-                  </p>
-                </div>
-              </div>
-              <button
-                className="bg-gold mt-4 rounded px-4 py-2 text-white"
-                onClick={handleDeleteRecipe}
-              >
-                Delete Recipe
-              </button>
-              <div className="mt-4">
-                <button
-                  className="bg-gold rounded px-4 py-2 text-white"
-                  onClick={handleToggle}
+      <div className="container mx-auto">
+        <div className="mx-5 my-5 w-full max-w-2xl rounded-lg bg-black bg-opacity-50 p-8">
+          <h2 className="text-3xl">Welcome, {sessionData?.user.name}! </h2>
+          <br></br>
+          <ul className="bg-gold menu rounded-box w-56 p-2">
+            {recipes?.map((recipe) => (
+              <li key={recipe.id}>
+                <a
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setSelectedRecipe(recipe);
+                  }}
+                  className="hover:text-gold text-white"
                 >
-                  Edit Recipe
+                  {recipe.mealName} <br></br> {recipe.calories} kcal
+                </a>
+              </li>
+            ))}
+          </ul>
+          <div className="mt-4 text-white">
+            {selectedRecipe && (
+              <div>
+                <h2 className="text-5xl font-bold">
+                  {selectedRecipe?.mealName}
+                </h2>
+                <p className="mt-8 text-base">
+                  Created On:{" "}
+                  {selectedRecipe?.createdAt
+                    ? new Date(selectedRecipe.createdAt).toLocaleString(
+                        "en-US",
+                        { dateStyle: "long", timeStyle: "short" }
+                      )
+                    : ""}
+                </p>
+                <p className="mt-4 text-base">Notes: {selectedRecipe?.notes}</p>
+                <div className="mt-4 grid grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-base">
+                      Protein: {selectedRecipe?.protein}g
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-base">Fat: {selectedRecipe?.fat}g</p>
+                  </div>
+                  <div>
+                    <p className="text-base">Carbs: {selectedRecipe?.carbs}g</p>
+                  </div>
+                  <div>
+                    <p className="text-base">
+                      Total Calories: {selectedRecipe?.calories}g
+                    </p>
+                  </div>
+                </div>
+                <button
+                  className="bg-gold mt-4 rounded px-4 py-2 text-white"
+                  onClick={handleDeleteRecipe}
+                >
+                  Delete Recipe
                 </button>
-                <EditRecipeModal open={open}>
-                  <form onSubmit={handleSubmit}>
-                    <input
-                      type="text"
-                      name="mealName"
-                      value={formData.mealName}
-                      onChange={handleChange}
-                      placeholder="Meal Name"
-                      className="input"
-                    ></input>
-                    <input
-                      type="text"
-                      name="notes"
-                      value={formData.notes}
-                      onChange={handleChange}
-                      placeholder="Notes"
-                      className="input"
-                    ></input>
-                    <input
-                      type="number"
-                      name="protein"
-                      value={formData.protein}
-                      onChange={handleChange}
-                      className="input"
-                    ></input>
-                    <input
-                      type="number"
-                      name="fat"
-                      value={formData.fat}
-                      onChange={handleChange}
-                      className="input"
-                    ></input>
-                    <input
-                      type="number"
-                      name="carbs"
-                      value={formData.carbs}
-                      onChange={handleChange}
-                      className="input"
-                    ></input>
-                    <input
-                      type="number"
-                      name="calories"
-                      value={formData.calories}
-                      onChange={handleChange}
-                      className="input"
-                    ></input>
-                    <button
-                      className="bg-gold mt-4 rounded px-4 py-2 text-white"
-                      onClick={handleSubmit}
-                    >
-                      UPDATE
-                    </button>
-                  </form>
+                <div className="mt-4">
                   <button
-                    className="bg-gold mt-4 rounded px-4 py-2 text-white"
+                    className="bg-gold rounded px-4 py-2 text-white"
                     onClick={handleToggle}
                   >
-                    CLOSE
+                    Edit Recipe
                   </button>
-                </EditRecipeModal>
-              </div>
-              {comments?.map((comment) => (
-                <div key={comment.id} className="mt-5">
-                  <CommentCard
-                    comment={comment}
-                    onDelete={() =>
-                      void deleteComment.mutate({ id: comment.id })
-                    }
-                  />
+                  <EditRecipeModal open={open}>
+                    <form onSubmit={handleSubmit}>
+                      <input
+                        type="text"
+                        name="mealName"
+                        value={formData.mealName}
+                        onChange={handleChange}
+                        placeholder="Meal Name"
+                        className="input"
+                      ></input>
+                      <input
+                        type="text"
+                        name="notes"
+                        value={formData.notes}
+                        onChange={handleChange}
+                        placeholder="Notes"
+                        className="input"
+                      ></input>
+                      <input
+                        type="number"
+                        name="protein"
+                        value={formData.protein}
+                        onChange={handleChange}
+                        className="input"
+                      ></input>
+                      <input
+                        type="number"
+                        name="fat"
+                        value={formData.fat}
+                        onChange={handleChange}
+                        className="input"
+                      ></input>
+                      <input
+                        type="number"
+                        name="carbs"
+                        value={formData.carbs}
+                        onChange={handleChange}
+                        className="input"
+                      ></input>
+                      <input
+                        type="number"
+                        name="calories"
+                        value={formData.calories}
+                        onChange={handleChange}
+                        className="input"
+                      ></input>
+                      <button
+                        className="bg-gold mt-4 rounded px-4 py-2 text-white"
+                        onClick={handleSubmit}
+                      >
+                        UPDATE
+                      </button>
+                    </form>
+                    <button
+                      className="bg-gold mt-4 rounded px-4 py-2 text-white"
+                      onClick={handleToggle}
+                    >
+                      CLOSE
+                    </button>
+                  </EditRecipeModal>
                 </div>
-              ))}
-              <CommentEditor
-                onSave={({ title, content }) => {
-                  void createComment.mutate({
-                    title,
-                    content,
-                    recipeId: selectedRecipe?.id ?? "",
-                  });
-                }}
-              />
-            </div>
-          )}
+                {comments?.map((comment) => (
+                  <div key={comment.id} className="mt-5">
+                    <CommentCard
+                      comment={comment}
+                      onDelete={() =>
+                        void deleteComment.mutate({ id: comment.id })
+                      }
+                    />
+                  </div>
+                ))}
+                <CommentEditor
+                  onSave={({ title, content }) => {
+                    void createComment.mutate({
+                      title,
+                      content,
+                      recipeId: selectedRecipe?.id ?? "",
+                    });
+                  }}
+                />
+              </div>
+            )}
+          </div>
+          <Link href="/createRecipe">
+            <button className="text-gold mt-4">ADD A RECIPE</button>
+          </Link>
+          {/* Add Link here that will take user to everyone's recipes */}
         </div>
-        <Link href="/createRecipe">
-          <button className="text-gold mt-4">ADD A RECIPE</button>
-        </Link>
-        {/* Add Link here that will take user to everyone's recipes */}
       </div>
     </div>
   );
