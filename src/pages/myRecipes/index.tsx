@@ -32,7 +32,6 @@ export default function MyRecipesPage() {
     }
   );
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
   function handleDeleteRecipe() {
     if (selectedRecipe !== null) {
       void deleteRecipe.mutate({ id: selectedRecipe.id });
@@ -81,6 +80,7 @@ export default function MyRecipesPage() {
   const deleteRecipe = api.recipe.delete.useMutation({
     onSuccess: () => {
       void refetchRecipes();
+      window.location.reload();
     },
   });
 
@@ -106,6 +106,7 @@ export default function MyRecipesPage() {
       void refetchComments();
     },
   });
+
   return (
     <div
       className="flex min-h-screen items-center justify-center"
@@ -114,7 +115,7 @@ export default function MyRecipesPage() {
       <div className="container mx-auto">
         <div className="mx-5 my-5 w-full max-w-2xl rounded-lg bg-black bg-opacity-50 p-8">
           <h2 className="text-3xl">Welcome, {sessionData?.user.name}! </h2>
-          <br></br>
+          <br />
           <ul className="bg-gold menu rounded-box w-56 p-2">
             {recipes?.map((recipe) => (
               <li key={recipe.id}>
@@ -126,7 +127,7 @@ export default function MyRecipesPage() {
                   }}
                   className="hover:text-gold text-white"
                 >
-                  {recipe.mealName} <br></br> {recipe.calories} kcal
+                  {recipe.mealName} <br /> {recipe.calories} kcal
                 </a>
               </li>
             ))}
@@ -142,7 +143,10 @@ export default function MyRecipesPage() {
                   {selectedRecipe?.createdAt
                     ? new Date(selectedRecipe.createdAt).toLocaleString(
                         "en-US",
-                        { dateStyle: "long", timeStyle: "short" }
+                        {
+                          dateStyle: "long",
+                          timeStyle: "short",
+                        }
                       )
                     : ""}
                 </p>
@@ -254,17 +258,26 @@ export default function MyRecipesPage() {
                     void createComment.mutate({
                       title,
                       content,
-                      recipeId: selectedRecipe?.id ?? "",
+                      recipeId: selectedRecipe.id,
                     });
                   }}
                 />
               </div>
             )}
           </div>
-          <Link href="/createRecipe">
-            <button className="text-gold mt-4">ADD A RECIPE</button>
-          </Link>
-          {/* Add Link here that will take user to everyone's recipes */}
+          <div className="mt-4">
+            <Link href="/">
+              <button className="bg-gold rounded px-4 py-2 text-white">
+                Back to Home
+              </button>
+            </Link>
+            <button
+              className="bg-gold ml-4 rounded px-4 py-2 text-white"
+              onClick={() => void signOut()}
+            >
+              Sign Out
+            </button>
+          </div>
         </div>
       </div>
     </div>
