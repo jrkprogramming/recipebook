@@ -194,19 +194,21 @@ export default function MyRecipesPage() {
                     </p>
                   </div>
                 </div>
-                <button
-                  className="bg-gold mt-4 rounded px-4 py-2 text-white"
-                  onClick={handleDeleteRecipe}
-                >
-                  Delete Recipe
-                </button>
-                <div className="mt-4">
+                <div className="mt-4 flex items-center justify-between">
                   <button
-                    className="bg-gold rounded px-4 py-2 text-white"
-                    onClick={handleToggle}
+                    className="bg-gold mr-2 mt-4 rounded py-2 text-red-500"
+                    onClick={handleDeleteRecipe}
                   >
-                    Edit Recipe
+                    Delete Recipe
                   </button>
+                  <div className="mt-4">
+                    <button
+                      className="bg-gold rounded px-10 py-2 text-yellow-500"
+                      onClick={handleToggle}
+                    >
+                      Edit Recipe
+                    </button>
+                  </div>
                   <EditRecipeModal open={open}>
                     <form onSubmit={handleSubmit}>
                       <input
