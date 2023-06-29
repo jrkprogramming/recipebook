@@ -16,6 +16,8 @@ export default function MyRecipesPage() {
   const [formData, setFormData] = useState({
     mealName: "",
     notes: "",
+    ingredients: [""],
+    instructions: [""],
     protein: 0,
     fat: 0,
     carbs: 0,
@@ -68,6 +70,8 @@ export default function MyRecipesPage() {
         id: selectedRecipe.id,
         mealName: formData.mealName,
         notes: formData.notes,
+        ingredients: formData.ingredients,
+        instructions: formData.instructions,
         protein: formData.protein,
         fat: formData.fat,
         carbs: formData.carbs,
@@ -121,6 +125,11 @@ export default function MyRecipesPage() {
             <Link href="/">
               <button className="bg-gold rounded px-4 py-2 text-white">
                 Back to Home
+              </button>
+            </Link>
+            <Link href="/createRecipe">
+              <button className="bg-gold rounded px-4 py-2 text-white">
+                Add a Recipe
               </button>
             </Link>
             <button

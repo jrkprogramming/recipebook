@@ -45,6 +45,8 @@ export default function CreateRecipePage() {
     createRecipe.mutate({
       mealName: formData.mealName,
       notes: formData.notes,
+      ingredients: formData.ingredients,
+      instructions: formData.instructions,
       protein: formData.protein,
       fat: formData.fat,
       carbs: formData.carbs,
@@ -63,6 +65,13 @@ export default function CreateRecipePage() {
     //@ts-ignore
     list[index][name] = value;
     setIngredientsList(list);
+
+    //save to state
+    const newIngredients = list.map((item) => item.ingredients);
+    setFormData((prevState) => ({
+      ...prevState,
+      ingredients: newIngredients,
+    }));
   };
 
   const handleIngredientsRemove = (index: number) => {
@@ -88,6 +97,13 @@ export default function CreateRecipePage() {
     //@ts-ignore
     list[index][name] = value;
     setInstructionsList(list);
+
+    //save to state
+    const newInstructions = list.map((item) => item.instructions);
+    setFormData((prevState) => ({
+      ...prevState,
+      instructions: newInstructions,
+    }));
   };
 
   const handleInstructionsRemove = (index: number) => {

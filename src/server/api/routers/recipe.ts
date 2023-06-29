@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { z } from "zod";
 import {
 	createTRPCRouter,
@@ -9,13 +10,25 @@ export const recipeRouter = createTRPCRouter({
 	getAll: protectedProcedure.query(({ ctx }) => {
 		return ctx.prisma.recipe.findMany({
 			where: {
-				userId: ctx.session.user.id
-			}
+				userId: ctx.session.user.id,
+			},
 		});
 	}),
 
 	edit: protectedProcedure
-		.input(z.object({ id: z.string(), mealName: z.string(), notes: z.string(), protein: z.number(), fat: z.number(), carbs: z.number(), calories: z.number() }))
+		.input(
+			z.object({
+				id: z.string(),
+				mealName: z.string(),
+				notes: z.string(),
+				protein: z.number(),
+				fat: z.number(),
+				carbs: z.number(),
+				calories: z.number(),
+				ingredients: z.array(z.string()),
+				instructions: z.array(z.string()),
+			})
+		)
 		.mutation(async ({ ctx, input }) => {
 			return ctx.prisma.recipe.update({
 				where: {
@@ -28,6 +41,9 @@ export const recipeRouter = createTRPCRouter({
 					fat: input.fat,
 					carbs: input.carbs,
 					calories: input.calories,
+					//@ts-ignore
+					ingredients: input.ingredients,
+					instructions: input.instructions,
 					userId: ctx.session.user.id,
 				},
 			});
@@ -44,7 +60,18 @@ export const recipeRouter = createTRPCRouter({
 		}),
 
 	create: protectedProcedure
-		.input(z.object({ mealName: z.string(), notes: z.string(), protein: z.number(), fat: z.number(), carbs: z.number(), calories: z.number() }))
+		.input(
+			z.object({
+				mealName: z.string(),
+				notes: z.string(),
+				protein: z.number(),
+				fat: z.number(),
+				carbs: z.number(),
+				calories: z.number(),
+				ingredients: z.array(z.string()),
+				instructions: z.array(z.string()),
+			})
+		)
 		.mutation(({ ctx, input }) => {
 			return ctx.prisma.recipe.create({
 				data: {
@@ -54,8 +81,11 @@ export const recipeRouter = createTRPCRouter({
 					fat: input.fat,
 					carbs: input.carbs,
 					calories: input.calories,
+					//@ts-ignore
+					ingredients: input.ingredients,
+					instructions: input.instructions,
 					userId: ctx.session.user.id,
-				}
-			})
-		})
-})
+				},
+			});
+		}),
+});
