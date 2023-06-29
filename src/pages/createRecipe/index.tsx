@@ -8,8 +8,6 @@ import { useSession } from "next-auth/react";
 
 export default function CreateRecipePage() {
   const { data: sessionData } = useSession();
-  const [ingredientsNumOfFieldsState, setIngredientsNumOfFieldsState] =
-    useState(1);
   const [formData, setFormData] = useState({
     mealName: "",
     notes: "",

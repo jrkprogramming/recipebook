@@ -117,6 +117,21 @@ export default function MyRecipesPage() {
         <div className="mx-5 my-5 w-full max-w-2xl rounded-lg bg-black bg-opacity-50 p-8">
           <h2 className="text-3xl">Welcome, {sessionData?.user.name}! </h2>
           <br />
+          <div className="mt-4">
+            <Link href="/">
+              <button className="bg-gold rounded px-4 py-2 text-white">
+                Back to Home
+              </button>
+            </Link>
+            <button
+              className="bg-gold ml-4 rounded px-4 py-2 text-white"
+              onClick={() => void signOut()}
+            >
+              Sign Out
+            </button>
+          </div>
+          <br></br>
+          <h2 className="text-xl">My Recipes:</h2>
           <ul className="bg-gold menu rounded-box w-56 p-2">
             {recipes?.map((recipe) => (
               <li key={recipe.id}>
@@ -282,19 +297,6 @@ export default function MyRecipesPage() {
               View Comments
             </button>
           ) : null}
-          {/* <div className="mt-4">
-            <Link href="/">
-              <button className="bg-gold rounded px-4 py-2 text-white">
-                Back to Home
-              </button>
-            </Link>
-            <button
-              className="bg-gold ml-4 rounded px-4 py-2 text-white"
-              onClick={() => void signOut()}
-            >
-              Sign Out
-            </button>
-          </div> */}
         </div>
       </div>
     </div>
