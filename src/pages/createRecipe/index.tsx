@@ -131,7 +131,7 @@ export default function CreateRecipePage() {
           </div>
           <div className="my-4">
             <label htmlFor="notes" className="mb-1 block font-bold text-white">
-              Notes
+              About
             </label>
             <textarea
               id="notes"
@@ -230,6 +230,7 @@ export default function CreateRecipePage() {
               ))}
             </div>
           </div>
+          <br></br>
           <div className="grid grid-cols-4 gap-2">
             <div>
               <label

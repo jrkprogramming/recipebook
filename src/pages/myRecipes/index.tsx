@@ -277,7 +277,7 @@ export default function MyRecipesPage() {
               Close Comments
             </button>
           ) : null}
-          {commentsState == false ? (
+          {commentsState == false && selectedRecipe ? (
             <button onClick={() => setCommentsState(true)}>
               View Comments
             </button>
