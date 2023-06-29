@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { useState, type FormEvent, type ChangeEvent } from "react";
 import { api } from "~/utils/api";
 import Link from "next/link";
@@ -5,9 +8,13 @@ import { useSession } from "next-auth/react";
 
 export default function CreateRecipePage() {
   const { data: sessionData } = useSession();
+  const [ingredientsNumOfFieldsState, setIngredientsNumOfFieldsState] =
+    useState(1);
   const [formData, setFormData] = useState({
     mealName: "",
     notes: "",
+    ingredients: [""],
+    instructions: [""],
     protein: 0,
     fat: 0,
     carbs: 0,
@@ -47,6 +54,54 @@ export default function CreateRecipePage() {
     });
   };
 
+  const [ingredientsList, setIngredientsList] = useState([{ ingredients: "" }]);
+
+  const handleIngredientsChange = (
+    e: { target: { name: any; value: any } },
+    index: string | number
+  ) => {
+    const { name, value } = e.target;
+    const list = [...ingredientsList];
+    //@ts-ignore
+    list[index][name] = value;
+    setIngredientsList(list);
+  };
+
+  const handleIngredientsRemove = (index: number) => {
+    const list = [...ingredientsList];
+    list.splice(index, 1);
+    setIngredientsList(list);
+  };
+
+  const handleIngredientsAdd = () => {
+    setIngredientsList([...ingredientsList, { ingredients: "" }]);
+  };
+
+  const [instructionsList, setInstructionsList] = useState([
+    { instructions: "" },
+  ]);
+
+  const handleInstructionsChange = (
+    e: { target: { name: any; value: any } },
+    index: string | number
+  ) => {
+    const { name, value } = e.target;
+    const list = [...instructionsList];
+    //@ts-ignore
+    list[index][name] = value;
+    setInstructionsList(list);
+  };
+
+  const handleInstructionsRemove = (index: number) => {
+    const list = [...instructionsList];
+    list.splice(index, 1);
+    setInstructionsList(list);
+  };
+
+  const handleInstructionsAdd = () => {
+    setInstructionsList([...instructionsList, { instructions: "" }]);
+  };
+
   return (
     <div
       className="flex min-h-screen items-center justify-center"
@@ -78,14 +133,102 @@ export default function CreateRecipePage() {
             <label htmlFor="notes" className="mb-1 block font-bold text-white">
               Notes
             </label>
-            <input
-              type="text"
+            <textarea
               id="notes"
               name="notes"
               value={formData.notes}
               onChange={handleChange}
               style={inputStyle}
             />
+            <br></br>
+
+            <div className="my-4">
+              <label
+                htmlFor="ingredients"
+                className="mb-1 block font-bold text-white"
+              >
+                Ingredients
+              </label>
+              {ingredientsList.map((singleIngredients, index) => (
+                <div key={index} className="services">
+                  <div className="first-division">
+                    <input
+                      name="ingredients"
+                      type="text"
+                      id="service"
+                      value={singleIngredients.ingredients}
+                      onChange={(e) => handleIngredientsChange(e, index)}
+                      style={inputStyle}
+                      required
+                    />
+                  </div>
+                  <div className="second-division">
+                    {ingredientsList.length !== 1 && (
+                      <button
+                        type="button"
+                        onClick={() => handleIngredientsRemove(index)}
+                        className="remove-btn font-bold text-red-600"
+                      >
+                        <span>Remove</span>
+                      </button>
+                    )}
+                  </div>
+                  {ingredientsList.length - 1 === index && (
+                    <button
+                      type="button"
+                      onClick={handleIngredientsAdd}
+                      className="add-btn"
+                    >
+                      <span>Add an Ingredient</span>
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            <div className="my-4">
+              <label
+                htmlFor="instructions"
+                className="mb-1 block font-bold text-white"
+              >
+                Instructions
+              </label>
+              {instructionsList.map((singleInstructions, index) => (
+                <div key={index} className="services">
+                  <div className="first-division">
+                    <input
+                      name="instructions"
+                      type="text"
+                      id="service"
+                      value={singleInstructions.instructions}
+                      onChange={(e) => handleInstructionsChange(e, index)}
+                      style={inputStyle}
+                      required
+                    />
+                  </div>
+                  <div className="second-division">
+                    {instructionsList.length !== 1 && (
+                      <button
+                        type="button"
+                        onClick={() => handleInstructionsRemove(index)}
+                        className="remove-btn font-bold text-red-600"
+                      >
+                        <span>Remove</span>
+                      </button>
+                    )}
+                  </div>
+                  {instructionsList.length - 1 === index && (
+                    <button
+                      type="button"
+                      onClick={handleInstructionsAdd}
+                      className="add-btn"
+                    >
+                      <span>Add an Instruction Step</span>
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
           <div className="grid grid-cols-4 gap-2">
             <div>
@@ -155,7 +298,7 @@ export default function CreateRecipePage() {
                 placeholder="Calories"
                 style={smallInputStyle}
               />{" "}
-              g
+              kcal
             </div>
           </div>
           <input

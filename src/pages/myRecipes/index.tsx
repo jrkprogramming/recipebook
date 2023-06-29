@@ -11,6 +11,7 @@ type Recipe = RouterOutputs["recipe"]["getAll"][0];
 
 export default function MyRecipesPage() {
   const { data: sessionData } = useSession();
+  const [commentsState, setCommentsState] = useState(false);
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
   const [formData, setFormData] = useState({
     mealName: "",
@@ -243,29 +244,45 @@ export default function MyRecipesPage() {
                     </button>
                   </EditRecipeModal>
                 </div>
-                {comments?.map((comment) => (
-                  <div key={comment.id} className="mt-5">
-                    <CommentCard
-                      comment={comment}
-                      onDelete={() =>
-                        void deleteComment.mutate({ id: comment.id })
-                      }
+                {commentsState && (
+                  <div>
+                    {comments?.map((comment) => (
+                      <div key={comment.id} className="mt-5">
+                        <CommentCard
+                          comment={comment}
+                          onDelete={() =>
+                            void deleteComment.mutate({ id: comment.id })
+                          }
+                        />
+                      </div>
+                    ))}
+                    <CommentEditor
+                      onSave={({ title, content }) => {
+                        void createComment.mutate({
+                          title,
+                          content,
+                          recipeId: selectedRecipe.id,
+                        });
+                      }}
                     />
                   </div>
-                ))}
-                <CommentEditor
-                  onSave={({ title, content }) => {
-                    void createComment.mutate({
-                      title,
-                      content,
-                      recipeId: selectedRecipe.id,
-                    });
-                  }}
-                />
+                )}
               </div>
             )}
           </div>
-          <div className="mt-4">
+          <br></br>
+          <br></br>
+          {commentsState == true ? (
+            <button onClick={() => setCommentsState(false)}>
+              Close Comments
+            </button>
+          ) : null}
+          {commentsState == false ? (
+            <button onClick={() => setCommentsState(true)}>
+              View Comments
+            </button>
+          ) : null}
+          {/* <div className="mt-4">
             <Link href="/">
               <button className="bg-gold rounded px-4 py-2 text-white">
                 Back to Home
@@ -277,7 +294,7 @@ export default function MyRecipesPage() {
             >
               Sign Out
             </button>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
