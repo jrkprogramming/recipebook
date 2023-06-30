@@ -157,10 +157,12 @@ export default function MyRecipesPage() {
               </li>
             ))}
           </ul>
+          <br></br>
+          <div className="divider"></div>
           <div className="mt-4 text-white">
             {selectedRecipe && (
               <div>
-                <h2 className="text-5xl font-bold">
+                <h2 className="text-7xl font-bold">
                   {selectedRecipe?.mealName}
                 </h2>
                 <p className="mt-8 text-base">
@@ -175,25 +177,52 @@ export default function MyRecipesPage() {
                       )
                     : ""}
                 </p>
-                <p className="mt-4 text-base">Notes: {selectedRecipe?.notes}</p>
+                <p className="mt-4 text-base">About: {selectedRecipe?.notes}</p>
+                <br></br>
+                <div>
+                  Ingredients:
+                  {selectedRecipe?.ingredients.map((ingredient, index) => (
+                    <ul key={index}>
+                      {index + 1}: {ingredient}
+                    </ul>
+                  ))}
+                </div>
+                <br></br>
+                <div>
+                  Instructions:
+                  {selectedRecipe?.instructions.map((instruction, index) => (
+                    <p key={index}>
+                      {index + 1}: {instruction}
+                    </p>
+                  ))}
+                </div>
+                <br></br>
+                <div className="divider"></div>
+                <br></br>
                 <div className="mt-4 grid grid-cols-2 gap-4">
                   <div>
                     <p className="text-base">
-                      Protein: {selectedRecipe?.protein}g
+                      Protein: {selectedRecipe?.protein} g
                     </p>
                   </div>
                   <div>
-                    <p className="text-base">Fat: {selectedRecipe?.fat}g</p>
-                  </div>
-                  <div>
-                    <p className="text-base">Carbs: {selectedRecipe?.carbs}g</p>
+                    <p className="text-base">Fat: {selectedRecipe?.fat} g</p>
                   </div>
                   <div>
                     <p className="text-base">
-                      Total Calories: {selectedRecipe?.calories}g
+                      Carbs: {selectedRecipe?.carbs} g
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-base">
+                      Total Calories: {selectedRecipe?.calories} kcal
                     </p>
                   </div>
                 </div>
+                <br></br>
+                <br></br>
+                <div className="divider"></div>
+                <br></br>
                 <div className="mt-4 flex items-center justify-between">
                   <button
                     className="bg-gold mr-2 mt-4 rounded py-2 text-red-500"
