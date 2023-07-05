@@ -80,7 +80,7 @@ export default function MyRecipesPage() {
   };
 
   const handleInstructionChange = (
-    e: ChangeEvent<HTMLInputElement>,
+    e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>,
     index: number
   ) => {
     const { value } = e.target;
@@ -407,7 +407,9 @@ export default function MyRecipesPage() {
           <h2 className="text-3xl">Edit Recipe</h2>
           <form onSubmit={handleSubmit}>
             <div className="mt-4">
-              <label className="text-xl">Meal Name:</label>
+              <label className="text-xl">Recipe Name:</label>
+              <br></br>
+              <br></br>
               <input
                 type="text"
                 name="mealName"
@@ -418,7 +420,9 @@ export default function MyRecipesPage() {
               />
             </div>
             <div className="mt-4">
-              <label className="text-xl">Notes:</label>
+              <label className="text-xl">Description:</label>
+              <br></br>
+              <br></br>
               <textarea
                 name="notes"
                 value={formData.notes}
@@ -460,8 +464,7 @@ export default function MyRecipesPage() {
               <p>Instructions:</p>
               {formData.instructions.map((instruction, index) => (
                 <div key={index} className="flex">
-                  <input
-                    type="text"
+                  <textarea
                     name={`instructions[${index}]`}
                     value={instruction}
                     onChange={(e) => handleInstructionChange(e, index)}
@@ -490,7 +493,7 @@ export default function MyRecipesPage() {
                   name="protein"
                   value={formData.protein}
                   onChange={handleChange}
-                  className="input"
+                  className="input px-2"
                 />
               </div>
               <div>
@@ -500,7 +503,7 @@ export default function MyRecipesPage() {
                   name="fat"
                   value={formData.fat}
                   onChange={handleChange}
-                  className="input"
+                  className="input px-2"
                 />
               </div>
               <div>
@@ -510,7 +513,7 @@ export default function MyRecipesPage() {
                   name="carbs"
                   value={formData.carbs}
                   onChange={handleChange}
-                  className="input"
+                  className="input px-2"
                 />
               </div>
               <div>
@@ -520,7 +523,7 @@ export default function MyRecipesPage() {
                   name="calories"
                   value={formData.calories}
                   onChange={handleChange}
-                  className="input"
+                  className="input px-2"
                 />
               </div>
             </div>
