@@ -1,4 +1,4 @@
-import { useState, type FormEvent, type ChangeEvent } from "react";
+import { useState, useEffect, type FormEvent, type ChangeEvent } from "react";
 import { api, type RouterOutputs } from "~/utils/api";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { CommentEditor } from "~/components/CommentEditor";
@@ -64,6 +64,78 @@ export default function MyRecipesPage() {
     });
   };
 
+  const handleIngredientChange = (
+    e: ChangeEvent<HTMLInputElement>,
+    index: number
+  ) => {
+    const { value } = e.target;
+    setFormData((prevState) => {
+      const updatedIngredients = [...prevState.ingredients];
+      updatedIngredients[index] = value;
+      return {
+        ...prevState,
+        ingredients: updatedIngredients,
+      };
+    });
+  };
+
+  const handleInstructionChange = (
+    e: ChangeEvent<HTMLInputElement>,
+    index: number
+  ) => {
+    const { value } = e.target;
+    setFormData((prevState) => {
+      const updatedInstructions = [...prevState.instructions];
+      updatedInstructions[index] = value;
+      return {
+        ...prevState,
+        instructions: updatedInstructions,
+      };
+    });
+  };
+
+  const handleAddIngredient = () => {
+    setFormData((prevState) => {
+      const updatedIngredients = [...prevState.ingredients, ""];
+      return {
+        ...prevState,
+        ingredients: updatedIngredients,
+      };
+    });
+  };
+
+  const handleRemoveIngredient = (index: number) => {
+    setFormData((prevState) => {
+      const updatedIngredients = [...prevState.ingredients];
+      updatedIngredients.splice(index, 1);
+      return {
+        ...prevState,
+        ingredients: updatedIngredients,
+      };
+    });
+  };
+
+  const handleAddInstruction = () => {
+    setFormData((prevState) => {
+      const updatedInstructions = [...prevState.instructions, ""];
+      return {
+        ...prevState,
+        instructions: updatedInstructions,
+      };
+    });
+  };
+
+  const handleRemoveInstruction = (index: number) => {
+    setFormData((prevState) => {
+      const updatedInstructions = [...prevState.instructions];
+      updatedInstructions.splice(index, 1);
+      return {
+        ...prevState,
+        instructions: updatedInstructions,
+      };
+    });
+  };
+
   const handleSubmit = (e: FormEvent) => {
     if (selectedRecipe !== null) {
       editRecipe.mutate({
@@ -112,34 +184,59 @@ export default function MyRecipesPage() {
     },
   });
 
+  useEffect(() => {
+    if (selectedRecipe !== null) {
+      setFormData({
+        mealName: selectedRecipe.mealName,
+        notes: selectedRecipe.notes,
+        ingredients: selectedRecipe.ingredients,
+        instructions: selectedRecipe.instructions,
+        protein: selectedRecipe.protein,
+        fat: selectedRecipe.fat,
+        carbs: selectedRecipe.carbs,
+        calories: selectedRecipe.calories,
+      });
+    } else {
+      setFormData({
+        mealName: "",
+        notes: "",
+        ingredients: [""],
+        instructions: [""],
+        protein: 0,
+        fat: 0,
+        carbs: 0,
+        calories: 0,
+      });
+    }
+  }, [selectedRecipe]);
   return (
     <div
       className="flex min-h-screen items-center justify-center"
       style={{ backgroundColor: "rgb(69, 67, 67)" }}
     >
       <div className="container mx-auto">
-        <div className="mx-5 my-5 w-full max-w-2xl rounded-lg bg-black bg-opacity-50 p-8">
+        <div className="mx-5 my-5 w-full max-w-2xl rounded-lg bg-black bg-opacity-50 p-20">
           <h2 className="text-3xl">Welcome, {sessionData?.user.name}! </h2>
           <br />
           <div className="mt-4">
             <Link href="/">
-              <button className="bg-gold rounded px-4 py-2 text-white">
+              <button className="bg-gold btn-primary btn rounded px-4 py-2 text-black">
                 Back to Home
               </button>
             </Link>
             <Link href="/createRecipe">
-              <button className="bg-gold rounded px-4 py-2 text-white">
+              <button className="bg-gold btn-primary btn rounded px-4 py-2 text-black">
                 Add a Recipe
               </button>
             </Link>
             <button
-              className="bg-gold ml-4 rounded px-4 py-2 text-white"
+              className="bg-gold btn-primary btn ml-4 rounded px-4 py-2 text-black"
               onClick={() => void signOut()}
             >
               Sign Out
             </button>
           </div>
-          <br></br>
+          <br />
           <h2 className="text-xl">My Recipes:</h2>
           <ul className="bg-gold menu rounded-box w-56 p-2">
             {recipes?.map((recipe) => (
@@ -157,7 +254,7 @@ export default function MyRecipesPage() {
               </li>
             ))}
           </ul>
-          <br></br>
+          <br />
           <div className="divider"></div>
           <div className="mt-4 text-white">
             {selectedRecipe && (
@@ -177,168 +274,273 @@ export default function MyRecipesPage() {
                       )
                     : ""}
                 </p>
-                <p className="mt-4 text-base">About: {selectedRecipe?.notes}</p>
-                <br></br>
-                <div>
-                  Ingredients:
-                  {selectedRecipe?.ingredients.map((ingredient, index) => (
-                    <ul key={index}>
-                      {index + 1}: {ingredient}
-                    </ul>
-                  ))}
+                <p className="mt-4 break-words text-base">
+                  About: {selectedRecipe?.notes}
+                </p>
+                <br />
+                <div className="break-words">
+                  {/* Content that needs word wrapping */}
                 </div>
-                <br></br>
                 <div>
-                  Instructions:
-                  {selectedRecipe?.instructions.map((instruction, index) => (
-                    <p key={index}>
-                      {index + 1}: {instruction}
-                    </p>
-                  ))}
+                  <p className="mt-4 break-words text-base">Ingredients:</p>
+                  <div className="break-words">
+                    {formData.ingredients.map((ingredient, index) => (
+                      <ul key={index}>
+                        <li key={index}>
+                          {ingredient ? `• ${ingredient}` : ""}
+                          {/* <div className="flex">
+                          <input
+                            type="text"
+                            name={`ingredients[${index}]`}
+                            value={ingredient}
+                            onChange={handleChange}
+                            className="input"
+                          />
+                          <button
+                            className="ml-2 rounded bg-red-500 px-2 py-1 text-white"
+                            onClick={() => handleRemoveIngredient(index)}
+                          >
+                            Remove
+                          </button>
+                        </div> */}
+                        </li>
+                      </ul>
+                    ))}
+                  </div>
+                  {/* <button
+                      className="mt-2 rounded bg-green-500 px-2 py-1 text-white"
+                      onClick={handleAddIngredient}
+                    >
+                      Add Ingredient
+                    </button> */}
                 </div>
-                <br></br>
+                <br />
+                <div>
+                  <p>Instructions:</p>
+                  {formData.instructions.map((instruction, index) => (
+                    <ol key={index}>
+                      <li key={index}>
+                        {index + 1}: {instruction}
+                      </li>
+                    </ol>
+                    // <div key={index} className="flex">
+                    //   <input
+                    //     type="text"
+                    //     name={`instructions[${index}]`}
+                    //     value={instruction}
+                    //     onChange={handleChange}
+                    //     className="input"
+                    //   />
+                    //   <button
+                    //     className="ml-2 rounded bg-red-500 px-2 py-1 text-white"
+                    //     onClick={() => handleRemoveInstruction(index)}
+                    //   >
+                    //     Remove
+                    //   </button>
+                    // </div>
+                  ))}
+                  {/* <button
+                    className="mt-2 rounded bg-green-500 px-2 py-1 text-white"
+                    onClick={handleAddInstruction}
+                  >
+                    Add Instruction
+                  </button> */}
+                </div>
+                <br />
                 <div className="divider"></div>
-                <br></br>
+                <br />
                 <div className="mt-4 grid grid-cols-2 gap-4">
                   <div>
-                    <p className="text-base">
-                      Protein: {selectedRecipe?.protein} g
-                    </p>
+                    <p className="text-base">Protein: {formData.protein} g</p>
                   </div>
                   <div>
-                    <p className="text-base">Fat: {selectedRecipe?.fat} g</p>
+                    <p className="text-base">Fat: {formData.fat} g</p>
                   </div>
                   <div>
-                    <p className="text-base">
-                      Carbs: {selectedRecipe?.carbs} g
-                    </p>
+                    <p className="text-base">Carbs: {formData.carbs} g</p>
                   </div>
                   <div>
                     <p className="text-base">
-                      Total Calories: {selectedRecipe?.calories} kcal
+                      Calories: {formData.calories} kcal
                     </p>
                   </div>
                 </div>
-                <br></br>
-                <br></br>
-                <div className="divider"></div>
-                <br></br>
-                <div className="mt-4 flex items-center justify-between">
+                <br />
+                <div>
                   <button
-                    className="bg-gold mr-2 mt-4 rounded py-2 text-red-500"
+                    className="mt-4 rounded bg-green-500 px-4 py-2 text-white"
+                    onClick={handleToggle}
+                  >
+                    Edit Recipe
+                  </button>
+                  <button
+                    className="ml-4 mt-4 rounded bg-red-500 px-4 py-2 text-white"
                     onClick={handleDeleteRecipe}
                   >
                     Delete Recipe
                   </button>
-                  <div className="mt-4">
-                    <button
-                      className="bg-gold rounded px-10 py-2 text-yellow-500"
-                      onClick={handleToggle}
-                    >
-                      Edit Recipe
-                    </button>
-                  </div>
-                  <EditRecipeModal open={open}>
-                    <form onSubmit={handleSubmit}>
-                      <input
-                        type="text"
-                        name="mealName"
-                        value={formData.mealName}
-                        onChange={handleChange}
-                        placeholder="Meal Name"
-                        className="input"
-                      ></input>
-                      <input
-                        type="text"
-                        name="notes"
-                        value={formData.notes}
-                        onChange={handleChange}
-                        placeholder="Notes"
-                        className="input"
-                      ></input>
-                      <input
-                        type="number"
-                        name="protein"
-                        value={formData.protein}
-                        onChange={handleChange}
-                        className="input"
-                      ></input>
-                      <input
-                        type="number"
-                        name="fat"
-                        value={formData.fat}
-                        onChange={handleChange}
-                        className="input"
-                      ></input>
-                      <input
-                        type="number"
-                        name="carbs"
-                        value={formData.carbs}
-                        onChange={handleChange}
-                        className="input"
-                      ></input>
-                      <input
-                        type="number"
-                        name="calories"
-                        value={formData.calories}
-                        onChange={handleChange}
-                        className="input"
-                      ></input>
-                      <button
-                        className="bg-gold mt-4 rounded px-4 py-2 text-white"
-                        onClick={handleSubmit}
-                      >
-                        UPDATE
-                      </button>
-                    </form>
-                    <button
-                      className="bg-gold mt-4 rounded px-4 py-2 text-white"
-                      onClick={handleToggle}
-                    >
-                      CLOSE
-                    </button>
-                  </EditRecipeModal>
                 </div>
-                {commentsState && (
-                  <div>
+                {/* <div>
+                  <h2 className="mt-8 text-3xl">Comments</h2>
+                  <div className="mt-4">
                     {comments?.map((comment) => (
-                      <div key={comment.id} className="mt-5">
-                        <CommentCard
-                          comment={comment}
-                          onDelete={() =>
-                            void deleteComment.mutate({ id: comment.id })
-                          }
-                        />
-                      </div>
+                      <CommentCard
+                        key={comment.id}
+                        comment={comment}
+                        onDelete={deleteComment.mutate}
+                      />
                     ))}
+                    <h2 className="mt-8 text-3xl">Add a Comment!</h2>
                     <CommentEditor
-                      onSave={({ title, content }) => {
-                        void createComment.mutate({
-                          title,
-                          content,
-                          recipeId: selectedRecipe.id,
-                        });
-                      }}
+                      onCreate={createComment.mutate}
+                      disabled={!sessionData?.user}
                     />
                   </div>
-                )}
+                </div> */}
               </div>
             )}
           </div>
-          <br></br>
-          <br></br>
-          {commentsState == true ? (
-            <button onClick={() => setCommentsState(false)}>
-              Close Comments
-            </button>
-          ) : null}
-          {commentsState == false && selectedRecipe ? (
-            <button onClick={() => setCommentsState(true)}>
-              View Comments
-            </button>
-          ) : null}
         </div>
       </div>
+      <EditRecipeModal open={open}>
+        <div className=" w-full max-w-2xl rounded-lg bg-black bg-opacity-50 p-8">
+          <h2 className="text-3xl">Edit Recipe</h2>
+          <form onSubmit={handleSubmit}>
+            <div className="mt-4">
+              <label className="text-xl">Meal Name:</label>
+              <input
+                type="text"
+                name="mealName"
+                value={formData.mealName}
+                onChange={handleChange}
+                className="input"
+                required
+              />
+            </div>
+            <div className="mt-4">
+              <label className="text-xl">Notes:</label>
+              <textarea
+                name="notes"
+                value={formData.notes}
+                onChange={handleChange}
+                className="input"
+              ></textarea>
+            </div>
+            <div className="mt-4">
+              <p>Ingredients:</p>
+              <ul>
+                {formData.ingredients.map((ingredient, index) => (
+                  <li key={index}>
+                    <div className="flex">
+                      <input
+                        type="text"
+                        name={`ingredients[${index}]`}
+                        value={ingredient}
+                        onChange={(e) => handleIngredientChange(e, index)}
+                        className="input"
+                      />
+                      <button
+                        className="ml-2 rounded bg-red-500 px-2 py-1 text-white"
+                        onClick={() => handleRemoveIngredient(index)}
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  </li>
+                ))}
+                <button
+                  className="mt-2 rounded bg-green-500 px-2 py-1 text-white"
+                  onClick={handleAddIngredient}
+                >
+                  Add Ingredient
+                </button>
+              </ul>
+            </div>
+            <div className="mt-4">
+              <p>Instructions:</p>
+              {formData.instructions.map((instruction, index) => (
+                <div key={index} className="flex">
+                  <input
+                    type="text"
+                    name={`instructions[${index}]`}
+                    value={instruction}
+                    onChange={(e) => handleInstructionChange(e, index)}
+                    className="input"
+                  />
+                  <button
+                    className="ml-2 rounded bg-red-500 px-2 py-1 text-white"
+                    onClick={() => handleRemoveInstruction(index)}
+                  >
+                    Remove
+                  </button>
+                </div>
+              ))}
+              <button
+                className="mt-2 rounded bg-green-500 px-2 py-1 text-white"
+                onClick={handleAddInstruction}
+              >
+                Add Instruction
+              </button>
+            </div>
+            <div className="mt-4 grid grid-cols-2 gap-4">
+              <div>
+                <label className="text-xl">Protein:</label>
+                <input
+                  type="number"
+                  name="protein"
+                  value={formData.protein}
+                  onChange={handleChange}
+                  className="input"
+                />
+              </div>
+              <div>
+                <label className="text-xl">Fat:</label>
+                <input
+                  type="number"
+                  name="fat"
+                  value={formData.fat}
+                  onChange={handleChange}
+                  className="input"
+                />
+              </div>
+              <div>
+                <label className="text-xl">Carbs:</label>
+                <input
+                  type="number"
+                  name="carbs"
+                  value={formData.carbs}
+                  onChange={handleChange}
+                  className="input"
+                />
+              </div>
+              <div>
+                <label className="text-xl">Calories:</label>
+                <input
+                  type="number"
+                  name="calories"
+                  value={formData.calories}
+                  onChange={handleChange}
+                  className="input"
+                />
+              </div>
+            </div>
+            <div className="mt-4">
+              <button
+                type="submit"
+                className="mt-4 rounded bg-green-500 px-4 py-2 text-white"
+              >
+                Save Changes
+              </button>
+              <button
+                className="ml-4 mt-4 rounded bg-red-500 px-4 py-2 text-white"
+                onClick={handleToggle}
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+      </EditRecipeModal>
     </div>
   );
 }
